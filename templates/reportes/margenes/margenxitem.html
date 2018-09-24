@@ -1,0 +1,110 @@
+{% extends 'reportes/base_reportes_con_filtros.html' %}
+
+{% block title %}
+    Mrg x Item
+{% endblock %}
+
+{% block titulo_indicador %}
+    Margen x Item
+{% endblock %}
+
+{% block filtros %}
+    {% if perms.biable.reportes_ventas and perms.biable.reporte_ventas_3 %}
+        <div class="col-sx-12 col-sm-4 col-md-3">
+            {% include 'reportes/components/lista_lineas.html' with lineas=lineas_list %}
+        </div>
+        <div class="col-sx-12 col-sm-4 col-md-3">
+            {% include 'reportes/components/lista_mes.html' with multiple=True %}
+        </div>
+        <div class="col-sx-12 col-sm-4 col-md-3">
+            {% include 'reportes/components/lista_ano.html' with anos_list=anos_list multiple=True %}
+        </div>
+    {% else %}
+        No tiene permisos suficientes para ver este informe
+    {% endif %}
+{% endblock %}
+
+{% block resultado %}
+    {% with movimientos=movimientos_list.all %}
+        {% if movimientos %}
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>
+                        Factura
+                    </th>
+                    <th>
+                        Item
+                    </th>
+                    <th>
+                        Procedencia
+                    </th>
+                    <th>
+                        Cliente
+                    </th>
+                    <th>
+                        Fecha
+                    </th>
+                    <th>
+                        Vendedor
+                    </th>
+                    <th>
+                        Venta
+                    </th>
+                    <th>
+                        Costo
+                    </th>
+                    <th>
+                        Rentabilidad
+                    </th>
+                    <th>
+                        Margen
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for movimiento in movimientos %}
+                    <tr>
+                        <td>
+                            <a href="{{ movimiento.factura.get_absolute_url }}">
+                                {{ movimiento.factura.tipo_documento }}-{{ movimiento.factura.nro_documento }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ movimiento.item_biable.descripcion }}
+                        </td>
+                        <td>
+                            {{ movimiento.item_biable.id_procedencia }}
+                        </td>
+                        <td>
+                            <a href="{{ movimiento.factura.cliente.get_absolute_url }}">
+                                {{ movimiento.factura.cliente.nombre }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ movimiento.factura.fecha_documento }}
+                        </td>
+                        <td>
+                            {{ movimiento.factura.vendedor.nombre }}
+                        </td>
+                        <td>
+                            {{ movimiento.venta_neto|floatformat }}
+                        </td>
+                        <td>
+                            {{ movimiento.costo_total|floatformat }}
+                        </td>
+                        <td>
+                            {{ movimiento.rentabilidad|floatformat }}
+                        </td>
+                        <td>
+                            {{ movimiento.margen|floatformat }}%
+                        </td>
+                    </tr>
+                {% empty %}
+                    <li>No articles yet.</li>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    {% endwith %}
+{% endblock %}

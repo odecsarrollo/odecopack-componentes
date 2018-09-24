@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}
+    Reporte de Seguimiento Envios TCC
+{% endblock %}
+{% block content %}
+    <h1>Reporte de Seguimiento Envios TCC</h1>
+    {% if perms.despachos_mercancias.ver_segui_envio_tcc %}
+        {% if boom %}
+            {% include 'despachos_mercancias/components/enviosTCC_table.html' with lista_envio=boom titulo="Envío Solo Boom" %}
+        {% endif %}
+        {% if entrega_boom %}
+            {% include 'despachos_mercancias/components/enviosTCC_table.html' with lista_envio=entrega_boom titulo="Envío Boom y Entrega" %}
+        {% endif %}
+        {% if entrega %}
+            {% include 'despachos_mercancias/components/enviosTCC_table.html' with lista_envio=entrega titulo="Envío Solo Entrega" %}
+        {% endif %}
+    {% else %}
+        No tiene permisos suficientes para ver este informe
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <h1>Detalles Envío TCC
+        {% if not object.fecha_entrega %}
+            <small><a href="{{ object.get_absolute_update_url }}"> Editar </a></small>
+        {% elif not object.fecha_entrega_boom and object.nro_tracking_boom %}
+            <small><a href="{{ object.get_absolute_update_url }}"> Editar </a></small>
+        {% endif %}
+    </h1>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Información General</h3>
+            <hr>
+            <p>
+                <span class="label">Cliente:</span>
+                {% if object.cliente %}{{ object.cliente }} {% else %} {{ object.cliente_alternativo }} {% endif %}
+            </p>
+            <p>
+                <span class="label">Departamento:</span> {{ object.ciudad.departamento.nombre }}
+            </p>
+            <p>
+                <span class="label">Ciudad:</span> {{ object.ciudad.nombre }}
+            </p>
+            <p>
+                <span class="label">Estado:</span> {{ object.get_estado_display }}
+            </p>
+
+            {% if object.nro_factura_transportadora %}
+                <p>
+                    <span class="label">Nro Factura TCC:</span> {{ object.nro_factura_transportadora }}
+                </p>
+            {% endif %}
+
+            <p>
+                <span class="label">Fecha de Envío:</span> {{ object.fecha_envio }}
+            </p>
+            <p>
+                <span class="label">Tipo Envío:</span> {{ object.get_tipo_display }}
+            </p>
+            <p>
+                <span class="label">Forma de Pago:</span> {{ object.get_forma_pago_display }}
+            </p>
+            <p>
+                <span class="label">Valor:</span> {{ object.valor }}
+            </p>
+        </div>
+        <div class="col-md-6">
+            <h3>Seguimiento Entrega</h3>
+            <hr>
+            <p>
+                <span class="label">Nro de seguimiento:</span> {{ object.nro_tracking }}
+            </p>
+            {% if object.fecha_entrega %}
+                <p>
+                    <span class="label">Fecha de Entrega:</span> {{ object.fecha_entrega }}
+                </p>
+            {% endif %}
+            {% if not object.fecha_entrega %}
+                <p>
+                    <span class="label">Días en Transito:</span>{{ object.get_numero_dias_desde_envio }}
+                </p>
+            {% else %}
+                <p>
+                    <span class="label">Día que se tomó la entrega:</span>{{ object.get_numero_dias_entrega }}
+                </p>
+            {% endif %}
+            {% if object.nro_tracking_boom %}
+                <h3>Servicio Boom</h3>
+                <hr>
+                <p>
+                    <span class="label">Nro de Seguimiento Boom:</span> {{ object.nro_tracking_boom }}
+                </p>
+                <p>
+                    <span class="label">Valor Boom:</span> {{ object.valor_boom }}
+                </p>
+                {% if object.fecha_entrega_boom %}
+                    <p>
+                        <span class="label">Fecha Entrega Boom:</span> {{ object.fecha_entrega_boom }}
+                    </p>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+    {% if object.observacion %}
+        <p>
+            <span class="label">Observación:</span> {{ object.observacion }}
+        </p>
+    {% endif %}
+    {% if object.facturas.all %}
+        <h2>Documentos Relacionados</h2>
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>
+                    Nro Factura
+                </th>
+                <th>
+                    Vendedor
+                </th>
+                <th>
+                    Cliente
+                </th>
+            </tr>
+
+            </thead>
+            <tbody>
+            {% for factura in object.facturas.all %}
+                <tr>
+                    <td>
+                        <a href="{{ factura.get_absolute_url }}">
+                            {{ factura.tipo_documento }}-{{ factura.nro_documento }}
+                        </a>
+                    </td>
+                    <td>
+                        {{ factura.vendedor }}
+                    </td>
+                    <td>
+                        {{ factura.cliente }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,184 @@
+$Color_Odeco_1 = #df5e00
+$Color_Odeco_2 = #df7755
+$color_h1_intranet = #df5e00
+$color_h2_intranet = #df5e00
+$color_h3_intranet = #df5e00
+$color_h4_intranet = #df5e00
+$color_h5_intranet = #df5e00
+$color_h6_intranet = #000000
+$color_p_intranet = #000000
+$color_label_intranet = #df7755
+
+body
+  font-size 11px
+
+.btn
+  font-size 1rem
+
+.form-control
+  font-size 0.9rem
+
+input-tabla-cotizador()
+  padding 0 !important
+  margin 0 !important
+  vertical-align middle !important
+  height 100%
+  input, select
+    height 100%
+    width 100%
+    background-color beige
+
+.input-tabla-cotizador-cantidad
+  input-tabla-cotizador()
+  width 40px
+
+.input-tabla-cotizador-descuento
+  input-tabla-cotizador()
+  width 30px
+
+.input-tabla-cotizador-dias-entrega
+  input-tabla-cotizador()
+  width 30px
+
+.input-tabla-cotizador-venta-perdida
+  input-tabla-cotizador()
+  width 100px
+
+.form-signin
+  max-width 330px;
+  padding 15px;
+  margin 0 auto
+
+nav
+  padding 10px
+
+main
+  margin 20px
+
+//Odeco Estilos
+.intranet
+  h1
+    color $color_h1_intranet
+    font-size 2.1em
+  h2
+    color $color_h2_intranet
+    font-size 1.8em
+  h3
+    color $color_h3_intranet
+    font-size 1.5em
+  h4
+    color $color_h4_intranet
+    font-size 1.3em
+  h5
+    color $color_h5_intranet
+    font-size 1.1em
+  h6
+    color $color_h6_intranet
+    font-size 0.9em
+  p
+    color $color_p_intranet
+  .label
+    color $color_label_intranet
+    font-size 1.2em
+  thead
+    color white
+    background-color $color_label_intranet
+
+  .borde_div
+    border-style solid
+    border-width thin
+    border-color gray
+    padding 1em
+  .div_detalle
+    padding-left 1em
+
+.fa-times-circle
+  color red
+
+.fa-exclamation-triangle
+  color red
+
+.fa-check-circle
+  color green
+
+//Comments
+.thumbnail
+  padding 0px
+
+.panel
+  position relative
+  & > .panel-heading
+    &:after
+      border-width 7px
+      border-right-color #f7f7f7
+      margin-top 1px
+      margin-left 2px
+    &:before
+      border-right-color #ddd
+      border-width 8px
+
+.panel > .panel-heading:after, .panel > .panel-heading:before
+  position absolute
+  top 11px
+  left -16px
+  right 100%
+  width 0
+  height 0
+  display block
+  content " "
+  border-color transparent
+  border-style solid solid outset
+  pointer-events none
+
+.cotizacion_seleccionada_sombra
+  -webkit-box-shadow 0 8px 6px -6px black
+  -moz-box-shadow 0 8px 6px -6px black
+  box-shadow 0 8px 6px -6px black
+  font-size 1.1rem
+
+.bubble
+  position relative
+  padding 0px
+  padding-left 1rem
+  margin-bottom 1rem
+  background #FFFFFF
+  -webkit-border-radius 10px
+  -moz-border-radius 10px
+  border-radius 10px
+  border #D77F7F solid 2px
+  &:after
+    content ''
+    position absolute
+    border-style solid
+    border-width 8px 10px 8px 0
+    border-color transparent #FFFFFF
+    display block
+    width 0
+    z-index 1
+    left -10px
+    top 12px
+  &:before
+    content ''
+    position absolute
+    border-style solid
+    border-width 9px 11px 9px 0
+    border-color transparent #D77F7F
+    display block
+    width 0
+    z-index 0
+    left -13px
+    top 11px
+
+.image-stage
+  position relative
+  padding 0
+  .fa
+    position absolute
+    top 10%
+    left 10%
+  .primero
+    color gold
+  .segundo
+    color silver
+  .tercero
+    color brown

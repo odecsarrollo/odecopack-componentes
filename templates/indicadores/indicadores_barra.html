@@ -1,0 +1,63 @@
+<h2>Indicadores {{ indicadores.nombre }}</h2>
+<style>
+    table {
+        font-size: 10px;
+    }
+</style>
+<table class="table table-bordered table-striped texto-indicadores">
+    <thead>
+    <th>
+        Tipo
+    </th>
+    <th>
+        Val. Mes $
+    </th>
+    <th>
+        Val. Día $
+    </th>
+    <th>
+        Cant. Mes #
+    </th>
+    <th>
+        Cant. Día #
+    </th>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Visitas</td>
+        <td></td>
+        <td></td>
+        <td>{{ indicadores.visitas_cliente_mes }}</td>
+        <td>{{ indicadores.visitas_cliente_dia }}</td>
+    </tr>
+    <tr>
+        <td>Ventas</td>
+        <td>{{ indicadores.facturacion_venta_mes|floatformat }}</td>
+        <td>{{ indicadores.facturacion_venta_dia|floatformat }}</td>
+        <td>{{ indicadores.cantidad_venta_mes|floatformat }}</td>
+        <td>{{ indicadores.cantidad_venta_dia|floatformat }}</td>
+    </tr>
+    <tr>
+        <td>Cotizaciones</td>
+        <td>{{ indicadores.valor_cotizacion_mes|floatformat }}</td>
+        <td>{{ indicadores.valor_cotizacion_dia|floatformat }}</td>
+        <td>{{ indicadores.cantidad_cotizaciones_mes|floatformat }}</td>
+        <td>{{ indicadores.cantidad_cotizaciones_dia|floatformat }}</td>
+    </tr>
+    <tr>
+        <td>% Conv. Ventas</td>
+        <td colspan="4">{{ indicadores.tasa_conversion_ventas_mes|floatformat }} %</td>
+    </tr>
+    <tr>
+        <td>Tot. Ventas</td>
+        <td colspan="4">{{ indicadores.facturacion_linea_mes|floatformat:0 }} </td>
+    </tr>
+    <tr>
+        <td>Mis % Ventas</td>
+        <td colspan="4">{{ indicadores.mi_participacion_facturacion|floatformat }} %</td>
+    </tr>
+    </tbody>
+    <tfoot>
+
+    </tfoot>
+</table>

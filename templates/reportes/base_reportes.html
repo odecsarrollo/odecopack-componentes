@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>{% block titulo_indicador %} {% endblock %}
+        <small id="hora_actualizacion"></small>
+    </h1>
+    {% block indicador_contenido %}
+
+    {% endblock %}
+{% endblock %}
+
+{% block javascrip_external_sources %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/orb/1.0.9/orb.min.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/orb/1.0.9/orb.min.css">
+{% endblock %}

@@ -1,0 +1,82 @@
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>
+            Nombre
+        </th>
+        <th>
+            Subempresa
+        </th>
+        <th>
+            Cargo
+        </th>
+        <th>
+            Email
+        </th>
+        <th>
+            Email 2
+        </th>
+        <th>
+            Nro Telefonico
+        </th>
+        <th>
+            Nro Telefonico 2
+        </th>
+        <th>
+            Nro Telefonico 3
+        </th>
+        <th>
+            Ya no trabaja
+        </th>
+        <th>
+            Fecha Cumpleaños
+        </th>
+    </tr>
+
+    </thead>
+    <tbody>
+    {% for contacto in contactos_list %}
+        <tr>
+            <td>
+                {{ contacto.nombres }} {{ contacto.apellidos }}
+            </td>
+            <td>
+                {% if contacto.subempresa %}
+                    {{ contacto.subempresa }}
+                {% endif %}
+            </td>
+            <td>
+                {{ contacto.cargo }}
+            </td>
+            <td>
+                {{ contacto.correo_electronico }}
+            </td>
+            <td>
+                {{ contacto.correo_electronico_alternativo }}
+            </td>
+            <td>
+                {{ contacto.nro_telefonico }}
+            </td>
+            <td>
+                {{ contacto.nro_telefonico_alternativo }}
+            </td>
+            <td>
+                {{ contacto.nro_telefonico_alternativo_dos }}
+            </td>
+            <td>
+                {% if contacto.retirado %}
+                    <i class="fa fa-check-circle" aria-hidden="true"></i>
+                {% endif %}
+            </td>
+            <td>
+                {% if contacto.fecha_cumpleanos %}
+                    {{ contacto.fecha_cumpleanos }}
+                {% endif %}
+            </td>
+            <td>
+                <a href="{{ contacto.get_absolute_url_update }}">Editar</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

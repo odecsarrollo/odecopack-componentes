@@ -1,0 +1,35 @@
+{% load l10n %}
+<h2>Seguimiento Cartera</h2>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>
+            Estado
+        </th>
+        <th>
+            Descripción
+        </th>
+    </tr>
+
+    </thead>
+    <tbody>
+    {% for cartera in carteras %}
+        <tr>
+            <td>
+                {% if cartera.factura.tarea_diaria_cartera.estado == 0 %}
+                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                {% else %}
+                    <i class="fa fa-check-circle" aria-hidden="true"></i>
+                {% endif %}
+            </td>
+            <td>
+                <a href="{{ cartera.factura.tarea_diaria_cartera.get_absolute_url }}">{{ cartera.factura.tarea_diaria_cartera.descripcion }}</a>
+            </td>
+
+            <td>
+                <a href="{{ cartera.factura.get_absolute_url }}" target="_blank">Ver</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

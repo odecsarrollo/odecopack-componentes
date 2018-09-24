@@ -1,0 +1,36 @@
+{% load l10n %}
+<h2>Seguimiento Envios TCC</h2>
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>
+            Estado
+        </th>
+        <th>
+            Descripción
+        </th>
+    </tr>
+
+    </thead>
+    <tbody>
+    {% for tarea in envios_pendientes %}
+        <tr>
+            <td>
+                {% if tarea.estado == 0 %}
+                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                {% else %}
+                    <i class="fa fa-check-circle" aria-hidden="true"></i>
+                {% endif %}
+            </td>
+            <td>
+                <a href="{{ tarea.get_absolute_url }}">{{ tarea.descripcion }}</a>
+            </td>
+
+            <td>
+                <a href="{{ tarea.envio.get_absolute_url }}" target="_blank">Ver</a>
+            </td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
