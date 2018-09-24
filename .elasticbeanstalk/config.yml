@@ -3,8 +3,8 @@ branch-defaults:
     environment: Custom-env
 global:
   application_name: OdecoPack
-  default_ec2_keyname: odecossh
-  default_platform: 64bit Amazon Linux 2016.09 v2.2.0 running Python 3.4
+  default_ec2_keyname: null
+  default_platform: Python 3.6
   default_region: us-west-2
-  profile: eb-cli
+  profile: odecopack
   sc: git

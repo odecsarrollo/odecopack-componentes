@@ -146,7 +146,7 @@ MY_APPS = (
 )
 
 THIRD_PART_APPS = (
-    #'import_export',
+    'import_export',
     'crispy_forms',
     'imagekit',
     'mistune',
