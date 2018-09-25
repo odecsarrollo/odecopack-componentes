@@ -1,4 +1,4 @@
-{% load crispy_forms_tags %}
+{% load crispy_forms_tags l10n %}
 {% if puede_modificar == True %}
     {% if not cotizacion.estado == 'FIN' and not cotizacion.estado == 'ELI' %}
         <form method="post" action="{% url 'cotizaciones:enviar' %}">
@@ -15,10 +15,12 @@
             {% if not cotizacion.en_edicion %}
                 <p>
                     <small>
-                        <button name="editar" value="{{ cotizacion.pk }}" type="submit"><i class="fa fa-pencil"
-                                                                                           aria-hidden="true"></i>
-                            Editar
-                        </button>
+                        {% localize off %}
+                            <button name="editar" value="{{ cotizacion.pk }}" type="submit"><i class="fa fa-pencil"
+                                                                                               aria-hidden="true"></i>
+                                Editar
+                            </button>
+                        {% endlocalize %}
                     </small>
                 </p>
             {% endif %}

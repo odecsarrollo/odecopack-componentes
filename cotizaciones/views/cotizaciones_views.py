@@ -30,6 +30,7 @@ from ..mixins import EnviarCotizacionMixin
 class EditarCotizacion(View):
     def post(self, request, *args, **kwargs):
         usuario = self.request.user
+        print(request.POST)
         coti_id = request.POST.get('editar')
         cotizacion = get_object_or_404(Cotizacion, pk=coti_id)
         cotizacion.en_edicion = True
