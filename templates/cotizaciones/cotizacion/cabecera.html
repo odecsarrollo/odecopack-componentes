@@ -3,7 +3,9 @@
     {% if not cotizacion.estado == 'FIN' and not cotizacion.estado == 'ELI' %}
         <form method="post" action="{% url 'cotizaciones:enviar' %}">
             {% csrf_token %}
-            <input type="hidden" name="id" value="{{ cotizacion.id }}"/>
+            {% localize off %}
+                <input type="hidden" name="id" value="{{ cotizacion.id }}"/>
+            {% endlocalize %}
             <small>
                 <button type="submit" name="enviar"><i class="fa fa-envelope" aria-hidden="true"></i> Reenviar Email
                 </button>
@@ -16,8 +18,7 @@
                 <p>
                     <small>
                         {% localize off %}
-                            <button name="editar" value="{{ cotizacion.pk }}" type="submit"><i class="fa fa-pencil"
-                                                                                               aria-hidden="true"></i>
+                            <button name="editar" value="{{ cotizacion.pk }}" type="submit"><i class="fa fa-pencil" aria-hidden="true"></i>
                                 Editar
                             </button>
                         {% endlocalize %}
