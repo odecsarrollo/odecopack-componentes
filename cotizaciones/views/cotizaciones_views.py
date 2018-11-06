@@ -43,8 +43,9 @@ class EditarCotizacion(View):
 class CotizacionEmailView(EnviarCotizacionMixin, View):
     def post(self, request, *args, **kwargs):
         id = self.request.POST.get('id')
+        email_adicional = self.request.POST.get('email_adicional', None)
         cotizacion_actual = Cotizacion.objects.get(id=id)
-        self.enviar_cotizacion(cotizacion_actual, self.request.user)
+        self.enviar_cotizacion(cotizacion_actual, self.request.user, email_adicional)
         return redirect(cotizacion_actual)
 
 

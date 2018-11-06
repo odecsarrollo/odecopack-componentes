@@ -1,31 +1,47 @@
 {% load crispy_forms_tags l10n %}
 {% if puede_modificar == True %}
     {% if not cotizacion.estado == 'FIN' and not cotizacion.estado == 'ELI' %}
-        <form method="post" action="{% url 'cotizaciones:enviar' %}">
-            {% csrf_token %}
-            {% localize off %}
-                <input type="hidden" name="id" value="{{ cotizacion.id }}"/>
-            {% endlocalize %}
-            <small>
-                <button type="submit" name="enviar"><i class="fa fa-envelope" aria-hidden="true"></i> Reenviar Email
-                </button>
-            </small>
-        </form>
-
-        <form method="post" action="{% url 'cotizaciones:editar_cotizacion' %}">
-            {% csrf_token %}
-            {% if not cotizacion.en_edicion %}
-                <p>
-                    <small>
-                        {% localize off %}
-                            <button name="editar" value="{{ cotizacion.pk }}" type="submit"><i class="fa fa-pencil" aria-hidden="true"></i>
-                                Editar
+        <div class="col-12">
+            <form method="post" action="{% url 'cotizaciones:enviar' %}">
+                {% csrf_token %}
+                {% localize off %}
+                    <input type="hidden" name="id" value="{{ cotizacion.id }}"/>
+                {% endlocalize %}
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <input type="email" name="email_adicional" style="width: 100%" placeholder="Email Adicional"/>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <small>
+                            <button type="submit" name="enviar"><i class="fa fa-envelope" aria-hidden="true"></i>
+                                Reenviar
+                                Email
                             </button>
-                        {% endlocalize %}
-                    </small>
-                </p>
-            {% endif %}
-        </form>
+                        </small>
+                    </div>
+                </div>
+            </form>
+        </div>
+        {% if not cotizacion.en_edicion %}
+            <div class="col-12">
+                <form method="post" action="{% url 'cotizaciones:editar_cotizacion' %}">
+                    {% csrf_token %}
+
+                    <p>
+                        <small>
+                            {% localize off %}
+                                <button name="editar" value="{{ cotizacion.pk }}" type="submit"><i
+                                        class="fa fa-pencil"
+                                        aria-hidden="true"></i>
+                                    Editar
+                                </button>
+                            {% endlocalize %}
+                        </small>
+                    </p>
+
+                </form>
+            </div>
+        {% endif %}
     {% endif %}
 {% endif %}
 {% if messages %}

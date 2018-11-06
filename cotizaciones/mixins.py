@@ -24,7 +24,7 @@ from biable.models import Colaborador, SucursalBiable
 
 
 class EnviarCotizacionMixin(object):
-    def enviar_cotizacion(self, cotizacion, user):
+    def enviar_cotizacion(self, cotizacion, user, email_adicional=None):
         version_cotizacion = cotizacion.version
 
         from_ventas_email = EmailConfiguration.objects.first().email_ventas_from
@@ -45,7 +45,10 @@ class EnviarCotizacionMixin(object):
                 from_email = "%s <%s>" % (enviar_como, from_ventas_email)
         else:
             from_email = "%s <%s>" % (enviar_como, from_ventas_email)
-        to = cotizacion.email
+        if email_adicional:
+            to = [cotizacion.email, email_adicional]
+        else:
+            to = [cotizacion.email]
         subject = "%s - %s" % ('Cotizacion', cotizacion.nro_cotizacion)
         if version_cotizacion > 1:
             subject = "%s, version %s" % (subject, cotizacion.version)
@@ -89,7 +92,7 @@ class EnviarCotizacionMixin(object):
 
         output = BytesIO()
         HTML(string=html_content).write_pdf(target=output)
-        msg = EmailMultiAlternatives(subject, text_content, from_email, to=[to], bcc=[user.email],
+        msg = EmailMultiAlternatives(subject, text_content, from_email, to=to, bcc=[user.email],
                                      reply_to=[user.email])
         msg.attach_alternative(html_content, "text/html")
 
@@ -137,8 +140,8 @@ class CotizacionesActualesMixin(object):
         context["cotizaciones_activas"] = Cotizacion.objects.filter(
             Q(usuario=usuario) &
             (
-                Q(estado="INI") |
-                Q(en_edicion=True)
+                    Q(estado="INI") |
+                    Q(en_edicion=True)
             )
         ).order_by('id')
         return context
