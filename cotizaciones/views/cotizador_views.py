@@ -126,7 +126,8 @@ class CotizacionUpdateView(
             form.instance.contacto_nuevo = False
 
         form.save()
-        self.enviar_cotizacion(self.object, self.request.user)
+        email_adicional = self.request.POST.get('email_adicional', None)
+        self.enviar_cotizacion(self.object, self.request.user, email_adicional)
 
         if self.object.usuario != self.request.user:
             return redirect('cotizaciones:listar_cotizaciones')

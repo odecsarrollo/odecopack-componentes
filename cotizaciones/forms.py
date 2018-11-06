@@ -164,6 +164,7 @@ class CotizacionForm(ModelForm):
     apellidos_contacto = forms.CharField(label="Apellidos", required=False)
     contacto_nuevo = forms.BooleanField(label="Contacto nuevo", required=False)
     razon_social = forms.CharField(label="Razón Social", required=False)
+    email_adicional = forms.EmailField(label="Email Adicional", required=False)
     observaciones = forms.Textarea()
     ciudad_despacho = forms.ModelChoiceField(
         queryset=Ciudad.objects.select_related('departamento', 'departamento__pais').all(),
@@ -237,6 +238,7 @@ class CotizacionForm(ModelForm):
             'observaciones',
             'contacto',
             'contacto_nuevo',
+            'email_adicional',
         ]
 
     def __init__(self, *args, **kwargs):
@@ -278,6 +280,7 @@ class CotizacionForm(ModelForm):
                 Field('nro_contacto'),
             ),
             PrependedText('email', '@', placeholder="Correo Electrónico"),
+            PrependedText('email_adicional', '@', placeholder="Correo Electrónico Adicional"),
             Div(
                 Field('contacto_nuevo'),
             ),
