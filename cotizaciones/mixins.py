@@ -2,6 +2,7 @@ from io import BytesIO
 
 from django.db.models import Q
 from django.core.mail import EmailMultiAlternatives
+from django.http import HttpResponse
 from django.template.loader import get_template, render_to_string
 from django.template import Context
 from django.conf import settings
@@ -24,6 +25,44 @@ from biable.models import Colaborador, SucursalBiable
 
 
 class EnviarCotizacionMixin(object):
+    def descargar_cotizacion(self, cotizacion, user):
+        version_cotizacion = cotizacion.version
+        ctx = {
+            'object': cotizacion,
+        }
+
+        try:
+            colaborador = Colaborador.objects.get(usuario__user=user)
+        except Colaborador.DoesNotExist:
+            colaborador = None
+
+        if not cotizacion.cliente_nuevo:
+            colaboradores = SucursalBiable.objects.values('vendedor_real__colaborador_id').filter(
+                cliente_id=cotizacion.cliente_biable_id, vendedor_real__isnull=False
+            ).distinct()
+            if colaboradores.exists():
+                if colaboradores.count() == 1:
+                    colaborador = Colaborador.objects.get(pk=colaboradores.first()['vendedor_real__colaborador_id'])
+                    cotizacion.usuario = colaborador.usuario.user
+
+                    cotizacion.save()
+            else:
+                colaborador = Colaborador.objects.get(usuario__user=user)
+
+        if colaborador:
+            if colaborador.foto_perfil:
+                url_avatar = colaborador.foto_perfil.url
+                ctx['avatar'] = url_avatar
+
+        html_content = get_template('cotizaciones/emails/cotizacion.html').render(Context(ctx))
+
+        output = BytesIO()
+        HTML(string=html_content).write_pdf(target=output)
+        nombre_archivo_cotizacion = "Cotizacion Odecopack - CB %s.pdf" % (cotizacion.id)
+        response = HttpResponse(output.getvalue(), content_type='application/pdf')
+        response['Content-Disposition'] = ('attachment; filename="%s"') % nombre_archivo_cotizacion
+        return response
+
     def enviar_cotizacion(self, cotizacion, user, email_adicional=None):
         version_cotizacion = cotizacion.version
 

@@ -22,6 +22,17 @@
                 </div>
             </form>
         </div>
+        <div class="col-12">
+            <form method="post" action="{% url 'cotizaciones:descargar_cotizacion' %}">
+                {% csrf_token %}
+                {% localize off %}
+                    <input type="hidden" name="id" value="{{ cotizacion.id }}"/>
+                {% endlocalize %}
+                <button type="submit" name="descargar"><i class="fa fa-download" aria-hidden="true"></i>
+                    Descargar
+                </button>
+            </form>
+        </div>
         {% if not cotizacion.en_edicion %}
             <div class="col-12">
                 <form method="post" action="{% url 'cotizaciones:editar_cotizacion' %}">

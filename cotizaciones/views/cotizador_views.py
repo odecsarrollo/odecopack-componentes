@@ -63,6 +63,8 @@ class CotizadorView(LoginRequiredMixin, View):
             kwargs['pk'] = self.request.POST.get('id')
             if form_enviar_descartar == 'Enviar Cotización':
                 view = CotizacionUpdateView.as_view()
+            elif form_enviar_descartar == 'Guardar':
+                view = CotizacionGuardarView.as_view()
             else:
                 view = DescartarCotizacionActualView.as_view()
 
@@ -129,6 +131,65 @@ class CotizacionUpdateView(
         email_adicional = self.request.POST.get('email_adicional', None)
         self.enviar_cotizacion(self.object, self.request.user, email_adicional)
 
+        if self.object.usuario != self.request.user:
+            return redirect('cotizaciones:listar_cotizaciones')
+        return super().form_valid(form)
+
+
+class CotizacionGuardarView(
+    SelectRelatedMixin,
+    EnviarCotizacionMixin,
+    ListaPreciosMixin,
+    CotizacionesActualesMixin,
+    UpdateView
+):
+    template_name = 'cotizaciones/cotizador/cotizador.html'
+    model = Cotizacion
+    form_class = CotizacionEnviarForm
+    context_object_name = 'cotizacion_actual'
+    select_related = ['cliente_biable', ]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['imagenes_form'] = ImagenCotizacionForm(initial={'cotizacion_id': self.object.id})
+        return context
+
+    def form_valid(self, form):
+        if not form.instance.items.exists():
+            mensaje = "No se puede enviar una cotización sin items"
+            messages.add_message(self.request, messages.ERROR, mensaje)
+            return redirect('cotizaciones:cotizador')
+        if form.instance.estado == "INI":
+            form.instance.estado = "ENV"
+        form.instance.actualmente_cotizador = False
+        if form.instance.en_edicion:
+            form.instance.version += 1
+        form.instance.en_edicion = False
+        form.instance.fecha_envio = timezone.now()
+
+        contacto = form.instance.contacto
+        if contacto and not form.instance.contacto_nuevo:
+            form.instance.nombres_contacto = contacto.nombres
+            form.instance.apellidos_contacto = contacto.apellidos
+            form.instance.nro_contacto = contacto.nro_telefonico
+            form.instance.email = contacto.correo_electronico
+        elif not form.instance.cliente_nuevo and form.instance.contacto_nuevo:
+            contacto = ContactoEmpresa()
+            contacto.nombres = form.instance.nombres_contacto
+            contacto.apellidos = form.instance.apellidos_contacto
+            contacto.nro_telefonico = form.instance.nro_contacto
+            contacto.correo_electronico = form.instance.email
+            contacto.cliente = form.instance.cliente_biable
+            contacto.subempresa = form.instance.sucursal_sub_empresa
+            contacto.creado_por = self.request.user
+            contacto.correo_electronico_alternativo = None
+            contacto.nro_telefonico_alternativo = None
+            contacto.nro_telefonico_alternativo_dos = None
+            contacto.save()
+            form.instance.contacto = contacto
+            form.instance.contacto_nuevo = False
+
+        form.save()
         if self.object.usuario != self.request.user:
             return redirect('cotizaciones:listar_cotizaciones')
         return super().form_valid(form)

@@ -310,8 +310,13 @@ class CotizacionEnviarForm(CotizacionForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         enviar = Div(
-            FormActions(
-                Submit('formEnvia', 'Enviar Cotización'),
+            Div(
+                FormActions(
+                    Submit('formEnvia', 'Guardar'),
+                ),
+                FormActions(
+                    Submit('formEnvia', 'Enviar Cotización'),
+                ),
             ),
             HTML('<hr/>'),
             FormActions(

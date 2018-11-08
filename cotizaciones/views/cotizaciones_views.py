@@ -30,7 +30,6 @@ from ..mixins import EnviarCotizacionMixin
 class EditarCotizacion(View):
     def post(self, request, *args, **kwargs):
         usuario = self.request.user
-        print(request.POST)
         coti_id = request.POST.get('editar')
         cotizacion = get_object_or_404(Cotizacion, pk=coti_id)
         cotizacion.en_edicion = True
@@ -47,6 +46,14 @@ class CotizacionEmailView(EnviarCotizacionMixin, View):
         cotizacion_actual = Cotizacion.objects.get(id=id)
         self.enviar_cotizacion(cotizacion_actual, self.request.user, email_adicional)
         return redirect(cotizacion_actual)
+
+
+class DescargarCotizacionView(EnviarCotizacionMixin, View):
+    def post(self, request, *args, **kwargs):
+        id = self.request.POST.get('id')
+        cotizacion_actual = Cotizacion.objects.get(id=id)
+        response = self.descargar_cotizacion(cotizacion_actual, self.request.user)
+        return response
 
 
 class TareaListView(SelectRelatedMixin, ListView):
