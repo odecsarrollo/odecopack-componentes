@@ -24,27 +24,30 @@ class IndicadorMesMixin(JSONResponseMixin, object):
             else:
                 subalternos = Colaborador.objects.all()
 
-            vendedores_biable = VendedorBiable.objects.select_related('colaborador__usuario__user').filter(
-                Q(colaborador__in=subalternos) &
-                ~Q(colaborador__usuario__user=usuario)
-            ).distinct()
-
+            indicadores_vendedores = []
             fecha_hoy = timezone.localtime(timezone.now()).date()
             day = fecha_hoy.day
             year = fecha_hoy.year
             month = fecha_hoy.month
 
-            indicadores_vendedores = []
-            # Indicadores de Venta
-            for vendedor in vendedores_biable:
-                indicador = self.consulta(year, month, day, vendedor_subalterno=vendedor)
-                if indicador:
-                    indicadores_vendedores.append(indicador)
             mi_indicador = self.consulta(year, month, day, usuario_sesion=usuario)
             if mi_indicador:
                 indicadores_vendedores.append(mi_indicador)
 
+            if subalternos:
+                vendedores_biable = VendedorBiable.objects.select_related('colaborador__usuario__user').filter(
+                    Q(colaborador__in=subalternos) &
+                    ~Q(colaborador__usuario__user=usuario)
+                ).distinct()
+
+                # Indicadores de Venta
+                for vendedor in vendedores_biable:
+                    indicador = self.consulta(year, month, day, vendedor_subalterno=vendedor)
+                    if indicador:
+                        indicadores_vendedores.append(indicador)
+
             context['indicadores_venta'] = indicadores_vendedores
+
         return context
 
     def consulta(self, year, month, day, vendedor_subalterno=None, usuario_sesion=None):
