@@ -152,7 +152,7 @@ class EnviarCotizacionMixin(object):
         msg.send()
 
         # Envio al asesor
-        msg.from_email = "Confirmación <noreply@odecopack.com>"
+        msg.from_email = "Confirmación <noreply@odecopack.co>"
         msg.to = [user.email]
         msg.reply_to = None
         msg.send()
