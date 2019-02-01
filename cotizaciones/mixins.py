@@ -131,8 +131,7 @@ class EnviarCotizacionMixin(object):
 
         output = BytesIO()
         HTML(string=html_content).write_pdf(target=output)
-        msg = EmailMultiAlternatives(subject, text_content, from_email, to=to, bcc=[user.email],
-                                     reply_to=[user.email])
+        msg = EmailMultiAlternatives(subject, text_content, from_email, to=to, reply_to=[user.email])
         msg.attach_alternative(html_content, "text/html")
 
         msg.attach(nombre_archivo_cotizacion, output.getvalue(), 'application/pdf')
@@ -151,6 +150,13 @@ class EnviarCotizacionMixin(object):
                     pass
 
         msg.send()
+
+        # Envio al asesor
+        msg.from_email = "Confirmación <noreply@odecopack.com>"
+        msg.to = [user.email]
+        msg.reply_to = None
+        msg.send()
+
         output.close()
         cotizacion.save()
 
