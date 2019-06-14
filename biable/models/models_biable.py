@@ -60,7 +60,7 @@ class ItemsBiable(models.Model):
     descripcion_dos = models.CharField(max_length=40)
     activo = models.BooleanField(default=True)
     nombre_tercero = models.CharField(max_length=120)
-    ultimo_costo = models.DecimalField(max_digits=18,decimal_places=3, default=0)
+    ultimo_costo = models.DecimalField(max_digits=18, decimal_places=3, default=0)
 
     linea = models.CharField(max_length=120, null=True, blank=True)
     categoria_mercadeo = models.CharField(max_length=120, null=True, blank=True)
@@ -124,8 +124,12 @@ class VendedorBiable(models.Model):
     nombre = models.CharField(max_length=200)
     linea_ventas = models.ForeignKey(LineaVendedorBiable, null=True, blank=True, related_name='mis_vendedores')
     activo = models.BooleanField(default=True)
-    colaborador = models.ForeignKey(Colaborador, null=True, blank=True, on_delete=models.PROTECT,
-                                    related_name='mi_vendedor_biable')
+    colaborador = models.ForeignKey(
+        Colaborador, null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name='mi_vendedor_biable'
+    )
 
     class Meta:
         verbose_name = 'Vendedor'

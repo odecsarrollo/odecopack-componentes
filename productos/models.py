@@ -42,13 +42,19 @@ class Producto(TimeStampedModel):
                               on_delete=models.PROTECT, null=True, blank=True)
 
     # region Caracteristica Físicas Producto
-    categoria_dos_por_categoria = models.ForeignKey(CategoriaDosCategoria, verbose_name='categoría dos',
-                                                    on_delete=models.PROTECT, related_name='mis_productos'
-                                                    )
-    tipo_por_categoria = models.ForeignKey(TipoProductoCategoría, verbose_name='tipo',
-                                           on_delete=models.PROTECT, related_name='mis_productos',
-                                           null=True, blank=True
-                                           )
+    categoria_dos_por_categoria = models.ForeignKey(
+        CategoriaDosCategoria,
+        verbose_name='categoría dos',
+        on_delete=models.PROTECT,
+        related_name='mis_productos'
+    )
+    tipo_por_categoria = models.ForeignKey(
+        TipoProductoCategoría,
+        verbose_name='tipo',
+        on_delete=models.PROTECT,
+        related_name='mis_productos',
+        null=True, blank=True
+    )
     material = models.ForeignKey(MaterialProducto, verbose_name='material', related_name='mis_productos',
                                  on_delete=models.PROTECT, null=True, blank=True)
     color = models.ForeignKey(ColorProducto, verbose_name='color', related_name='mis_productos',

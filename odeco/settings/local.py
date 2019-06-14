@@ -74,6 +74,7 @@ CACHES = {
 
 ########## DATABASE CONFIGURATION
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
+# Prueba cambios
 
 DATABASES = {
     'default': {
