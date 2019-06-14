@@ -14,6 +14,7 @@ class BandaDetailView(DetailView):
         qs = self.model.objects.select_related(
             'serie',
             'tipo',
+            'tipo__tipo',
             'material',
             'color',
             'material_varilla',
@@ -27,4 +28,13 @@ class BandaListView(ListView):
     context_object_name = 'bandas_list'
 
     def get_queryset(self):
-        return super().get_queryset()
+        qs = self.model.objects.select_related(
+            'serie',
+            'tipo',
+            'tipo__tipo',
+            'tipo__categoria_uno',
+            'color',
+            'material_varilla',
+            'empujador_tipo',
+        ).all()
+        return qs

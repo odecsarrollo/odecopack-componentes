@@ -27,3 +27,25 @@ class ProductoBusqueda(forms.Form):
                 css_class="col-sm-5"
             )
         )
+
+
+class ProductoCostoBusqueda(forms.Form):
+    buscar = forms.CharField(max_length=100, required=False, label="Referencia")
+
+    def __init__(self, *args, **kwargs):
+        super(ProductoCostoBusqueda, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'id-busqueda'
+        self.helper.form_method = "GET"
+        self.helper.form_action = ""
+
+        self.helper.layout = Layout(
+            Div(
+                Field('tipo'),
+                css_class="col-sm-3"
+            ),
+            Div(
+                FieldWithButtons('buscar', Submit('accion', 'Buscar')),
+                css_class="col-sm-5"
+            )
+        )

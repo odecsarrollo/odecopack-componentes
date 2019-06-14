@@ -20,85 +20,91 @@
         </ul>
     {% endif %}
 
-    {% with cotizaciones_activas_list=cotizaciones_activas.all %}
-        {% include 'cotizaciones/cotizador/cotizaciones_actuales_menu.html' %}
-    {% endwith %}
+    {% if not perms.listasprecios.ver_costo_cop %}
+        {% with cotizaciones_activas_list=cotizaciones_activas.all %}
+            {% include 'cotizaciones/cotizador/cotizaciones_actuales_menu.html' %}
+        {% endwith %}
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" {% if not tab == "LP" %} class="active" {% endif %}>
+                <a href="#cotizacion" aria-controls="cotizacion" role="tab" data-toggle="tab">
+                    Detalle Cotización
+                </a>
+            </li>
+            <li role="presentation"{% if tab == "LP" %} class="active" {% endif %}>
+                <a href="#lista_precios" aria-controls="lista_precios" role="tab" data-toggle="tab">
+                    Lista de Precios
+                </a>
+            </li>
+        </ul>
 
-
-    <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" {% if not tab == "LP" %} class="active" {% endif %}>
-            <a href="#cotizacion" aria-controls="cotizacion" role="tab" data-toggle="tab">
-                Detalle Cotización
-            </a>
-        </li>
-        <li role="presentation"{% if tab == "LP" %} class="active" {% endif %}>
-            <a href="#lista_precios" aria-controls="lista_precios" role="tab" data-toggle="tab">
-                Lista de Precios
-            </a>
-        </li>
-    </ul>
-
-    <div class="tab-content">
-        <div role="tabpanel" class="tab-pane {% if not tab == "LP" %} active {% endif %}" id="cotizacion">
-            <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
-            <div class="row">
-                {% if cotizacion_actual %}
-                    <div class="col-md-9">
-                        <div class="row">
-                            <div class="col-md-12">
-                                {% with sucursales=cotizacion_actual.cliente_biable.mis_sucursales.all %}
-                                    {% if sucursales %}
-                                        <h3>Vendedores que atienden a {{ cotizacion_actual.cliente_biable.nombre }}</h3>
-                                        {% for sucursal_cliente in sucursales %}
-                                            <li>
-                                                {% if sucursal_cliente.vendedor_real %}
-                                                    {{ sucursal_cliente.vendedor_real|title }} -
-                                                {% else %}
-                                                    <span style="color: red">SIN VENDEDOR ASIGNADO - </span>
-                                                {% endif %}
-                                                {% if sucursal_cliente.nombre_establecimiento_intranet %}
-                                                    {{ sucursal_cliente.nombre_establecimiento_intranet }}
-                                                {% else %}
-                                                    {{ sucursal_cliente.direccion }}
-                                                {% endif %}
-                                            </li>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endwith %}
-                                <h3>Detalle Cotización {{ cotizacion_actual.nro_cotizacion }}</h3>
-                                {% include 'cotizaciones/cotizador/cotizacion_detalle.html' %}
-                            </div>
-                            <div class="col-md-12">
-                                <div>
-                                    <h3>Adicionar Item Fuera de Lista</h3>
-                                    <hr>
-                                    {% crispy forma_item_otro %}
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane {% if not tab == "LP" %} active {% endif %}" id="cotizacion">
+                <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+                <div class="row">
+                    {% if cotizacion_actual %}
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {% with sucursales=cotizacion_actual.cliente_biable.mis_sucursales.all %}
+                                        {% if sucursales %}
+                                            <h3>Vendedores que atienden
+                                                a {{ cotizacion_actual.cliente_biable.nombre }}</h3>
+                                            {% for sucursal_cliente in sucursales %}
+                                                <li>
+                                                    {% if sucursal_cliente.vendedor_real %}
+                                                        {{ sucursal_cliente.vendedor_real|title }} -
+                                                    {% else %}
+                                                        <span style="color: red">SIN VENDEDOR ASIGNADO - </span>
+                                                    {% endif %}
+                                                    {% if sucursal_cliente.nombre_establecimiento_intranet %}
+                                                        {{ sucursal_cliente.nombre_establecimiento_intranet }}
+                                                    {% else %}
+                                                        {{ sucursal_cliente.direccion }}
+                                                    {% endif %}
+                                                </li>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endwith %}
+                                    <h3>Detalle Cotización {{ cotizacion_actual.nro_cotizacion }}</h3>
+                                    {% include 'cotizaciones/cotizador/cotizacion_detalle.html' %}
                                 </div>
+                                <div class="col-md-12">
+                                    <div>
+                                        <h3>Adicionar Item Fuera de Lista</h3>
+                                        <hr>
+                                        {% crispy forma_item_otro %}
+                                    </div>
+                                </div>
+                                {% include 'cotizaciones/cotizador/imagenes_cotizacion.html' %}
                             </div>
-                            {% include 'cotizaciones/cotizador/imagenes_cotizacion.html' %}
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <h3>Cotización {{ cotizacion_actual.nro_cotizacion }}</h3>
-                        <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
-                        {% crispy form %}
-                    </div>
-                {% else %}
-                    <div class="col-md-3 col-md-offset-3">
-                        <h3>Crear Cotización</h3>
-                        <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
-                        {% crispy form %}
-                    </div>
-                {% endif %}
+                        <div class="col-md-3">
+                            <h3>Cotización {{ cotizacion_actual.nro_cotizacion }}</h3>
+                            <script type="text/javascript"
+                                    src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+                            {% crispy form %}
+                        </div>
+                    {% else %}
+                        <div class="col-md-3 col-md-offset-3">
+                            <h3>Crear Cotización</h3>
+                            <script type="text/javascript"
+                                    src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+                            {% crispy form %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane {% if tab == "LP" %} active {% endif %}" id="lista_precios">
+                <div class="row">
+                    {% include 'cotizaciones/cotizador/lista_precios.html' %}
+                </div>
             </div>
         </div>
-        <div role="tabpanel" class="tab-pane {% if tab == "LP" %} active {% endif %}" id="lista_precios">
-            <div class="row">
-                {% include 'cotizaciones/cotizador/lista_precios.html' %}
-            </div>
-        </div>
+    {% else %}
+        <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+        {% include 'cotizaciones/cotizador/lista_precios.html' %}
+    {% endif %}
 
-    </div>
 {% endblock %}
 
 {% block jquery_version %}
@@ -122,8 +128,7 @@
                 $("#coti_val_descuento").html(numberWithCommas(data.descuento_total));
                 if (data.deleted) {
                     $("#item-" + item).fadeOut();
-                }
-                else {
+                } else {
                     $("#item-" + item).find('.total').html(numberWithCommas(data.total_line))
                     $("#item-" + item).find('.descuento').html(numberWithCommas(data.descuento))
                     $("#item-" + item).find('.cantidad_total').html(numberWithCommas(data.total_cantidad))

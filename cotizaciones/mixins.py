@@ -18,7 +18,7 @@ from productos.models import (
 )
 
 from .forms import ItemCotizacionOtrosForm
-from listasprecios.forms import ProductoBusqueda
+from listasprecios.forms import ProductoBusqueda, ProductoCostoBusqueda
 from .models import Cotizacion
 
 from biable.models import Colaborador, SucursalBiable
@@ -224,6 +224,8 @@ class ListaPreciosMixin(object):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['busqueda_producto_form'] = ProductoBusqueda(self.request.GET or None)
+        if self.request.user.has_perm('listasprecios.ver_costo_cop'):
+            context['busqueda_producto_form'] = ProductoCostoBusqueda(self.request.GET or None)
         if self.object:
             context["forma_item_otro"] = ItemCotizacionOtrosForm(initial={'cotizacion_id': self.object.id})
         self.get_lista_precios(context)
@@ -233,19 +235,32 @@ class ListaPreciosMixin(object):
         query = self.request.GET.get("buscar")
         if query:
             context['tab'] = "LP"
-            qs_bandas = Banda.activos.componentes().filter(
+            qs_bandas = Banda.activos.componentes().select_related(
+                "costo_ensamblado"
+            ).prefetch_related(
+                "ensamblado",
+            ).filter(
                 Q(referencia__icontains=query) |
                 Q(descripcion_estandar__icontains=query) |
                 Q(descripcion_comercial__icontains=query)
             ).distinct()
 
-            qs_componentes = Producto.activos.componentes().select_related("unidad_medida").filter(
+            qs_componentes = Producto.activos.componentes().select_related(
+                "unidad_medida",
+                "margen",
+                "margen__proveedor",
+                "margen__proveedor__moneda",
+            ).filter(
                 Q(referencia__icontains=query) |
                 Q(descripcion_estandar__icontains=query) |
                 Q(descripcion_comercial__icontains=query)
             ).distinct().order_by('-modified')
 
-            qs_articulos_catalogo = ArticuloCatalogo.activos.todos().filter(
+            qs_articulos_catalogo = ArticuloCatalogo.activos.todos().select_related(
+                "margen",
+                "margen__proveedor",
+                "margen__proveedor__moneda",
+            ).filter(
                 Q(referencia__icontains=query) |
                 Q(nombre__icontains=query) |
                 Q(categoria__icontains=query)

@@ -12,10 +12,17 @@
                 <tr>
                     <td>Referencia</td>
                     <td>Descripción</td>
-                    <td>Cant. Emp.</td>
+                    {% if not perms.listasprecios.ver_costo_cop %}
+                        <td>Cant. Emp.</td>
+                    {% endif %}
                     <td>Uni. Med.</td>
-                    <td>Precio</td>
-                    <td>Precio Aereo</td>
+                    {% if perms.listasprecios.ver_costo_cop %}
+                        <td>Costo Cop</td>
+                    {% endif %}
+                    {% if not perms.listasprecios.ver_costo_cop %}
+                        <td>Precio</td>
+                        <td>Precio Aereo</td>
+                    {% endif %}
                     <td>Origen</td>
                 </tr>
                 </thead>
@@ -26,30 +33,37 @@
                     <tr>
                         <td>{{ pro.referencia }} </td>
                         <td>{{ pro.descripcion_comercial|title }} </td>
-                        <td>{{ pro.cantidad_empaque }} </td>
+                        {% if not perms.listasprecios.ver_costo_cop %}
+                            <td>{{ pro.cantidad_empaque }} </td>
+                        {% endif %}
                         <td>{{ pro.unidad_medida.nombre|title }} </td>
-                        <td style="text-align: right">
-                            {% if precio > 0 %}
-                                {% if cotizacion_actual %}
-                                    <a href="{% url 'cotizaciones:add_item_cotizacion' item_id=pro.id precio=precio forma_pago=forma_de_pago cot_id=cotizacion_actual.id tipo=1 tras_tipo='CONVENCIONAL' %}">
+                        {% if perms.listasprecios.ver_costo_cop %}
+                            <td>{{ pro.get_costo_cop }} </td>
+                        {% endif %}
+                        {% if not perms.listasprecios.ver_costo_cop %}
+                            <td style="text-align: right">
+                                {% if precio > 0 %}
+                                    {% if cotizacion_actual %}
+                                        <a href="{% url 'cotizaciones:add_item_cotizacion' item_id=pro.id precio=precio forma_pago=forma_de_pago cot_id=cotizacion_actual.id tipo=1 tras_tipo='CONVENCIONAL' %}">
+                                            {{ precio }}
+                                        </a>
+                                    {% else %}
                                         {{ precio }}
-                                    </a>
-                                {% else %}
-                                    {{ precio }}
+                                    {% endif %}
                                 {% endif %}
-                            {% endif %}
-                        </td>
-                        <td style="text-align: right">
-                            {% if precio_aereo > 0 %}
-                                {% if cotizacion_actual %}
-                                    <a href="{% url 'cotizaciones:add_item_cotizacion' item_id=pro.id precio=precio_aereo forma_pago=forma_de_pago cot_id=cotizacion_actual.id tipo=1 tras_tipo='AEREO' %}">
+                            </td>
+                            <td style="text-align: right">
+                                {% if precio_aereo > 0 %}
+                                    {% if cotizacion_actual %}
+                                        <a href="{% url 'cotizaciones:add_item_cotizacion' item_id=pro.id precio=precio_aereo forma_pago=forma_de_pago cot_id=cotizacion_actual.id tipo=1 tras_tipo='AEREO' %}">
+                                            {{ precio_aereo }}
+                                        </a>
+                                    {% else %}
                                         {{ precio_aereo }}
-                                    </a>
-                                {% else %}
-                                    {{ precio_aereo }}
+                                    {% endif %}
                                 {% endif %}
-                            {% endif %}
-                        </td>
+                            </td>
+                        {% endif %}
                         <td> LISTA PRECIOS CB</td>
                     </tr>
                 {% endfor %}
@@ -64,30 +78,37 @@
                     <tr>
                         <td>{{ pro.referencia }} </td>
                         <td>{{ pro.nombre|title }} </td>
-                        <td></td>
+                        {% if not perms.listasprecios.ver_costo_cop %}
+                            <td></td>
+                        {% endif %}
                         <td>{{ pro.unidad_medida|title }} </td>
-                        <td style="text-align: right">
-                            {% if precio > 0 %}
-                                {% if cotizacion_actual %}
-                                    <a href="{% url 'cotizaciones:add_item_cotizacion' item_id=pro.id precio=precio forma_pago=forma_de_pago cot_id=cotizacion_actual.id tipo=2 tras_tipo='CONVENCIONAL' %}">
+                        {% if perms.listasprecios.ver_costo_cop %}
+                            <td>{{ pro.get_costo_cop }} </td>
+                        {% endif %}
+                        {% if not perms.listasprecios.ver_costo_cop %}
+                            <td style="text-align: right">
+                                {% if precio > 0 %}
+                                    {% if cotizacion_actual %}
+                                        <a href="{% url 'cotizaciones:add_item_cotizacion' item_id=pro.id precio=precio forma_pago=forma_de_pago cot_id=cotizacion_actual.id tipo=2 tras_tipo='CONVENCIONAL' %}">
+                                            {{ precio }}
+                                        </a>
+                                    {% else %}
                                         {{ precio }}
-                                    </a>
-                                {% else %}
-                                    {{ precio }}
+                                    {% endif %}
                                 {% endif %}
-                            {% endif %}
-                        </td>
-                        <td style="text-align: right">
-                            {% if precio_aereo > 0 %}
-                                {% if cotizacion_actual %}
-                                    <a href="{% url 'cotizaciones:add_item_cotizacion' item_id=pro.id precio=precio_aereo forma_pago=forma_de_pago cot_id=cotizacion_actual.id tipo=2 tras_tipo='AEREO' %}">
+                            </td>
+                            <td style="text-align: right">
+                                {% if precio_aereo > 0 %}
+                                    {% if cotizacion_actual %}
+                                        <a href="{% url 'cotizaciones:add_item_cotizacion' item_id=pro.id precio=precio_aereo forma_pago=forma_de_pago cot_id=cotizacion_actual.id tipo=2 tras_tipo='AEREO' %}">
+                                            {{ precio_aereo }}
+                                        </a>
+                                    {% else %}
                                         {{ precio_aereo }}
-                                    </a>
-                                {% else %}
-                                    {{ precio_aereo }}
+                                    {% endif %}
                                 {% endif %}
-                            {% endif %}
-                        </td>
+                            </td>
+                        {% endif %}
                         <td> {% if pro.origen == 'LP_INTRANET' %} LISTA PRECIOS CA {% else %} CGUNO
                             {{ pro.origen }} {% endif %}</td>
                     </tr>
@@ -97,21 +118,28 @@
                     <tr>
                         <td>{{ banda.referencia }} </td>
                         <td>{{ banda.descripcion_comercial|title }} </td>
-                        <td> {{ banda.longitud }} </td>
+                        {% if not perms.listasprecios.ver_costo_cop %}
+                            <td> {{ banda.longitud }} </td>
+                        {% endif %}
                         <td>Metro</td>
-                        <td style="text-align: right">
-                            {% if precio > 0 %}
-                                {% if cotizacion_actual %}
-                                    <a href="{% url 'cotizaciones:add_item_cotizacion' item_id=banda.id precio=precio forma_pago=forma_de_pago cot_id=cotizacion_actual.id tipo=3 tras_tipo='CONVENCIONAL' %}">
+                        {% if perms.listasprecios.ver_costo_cop %}
+                            <td>{{ banda.get_costo_cop }} </td>
+                        {% endif %}
+                        {% if not perms.listasprecios.ver_costo_cop %}
+                            <td style="text-align: right">
+                                {% if precio > 0 %}
+                                    {% if cotizacion_actual %}
+                                        <a href="{% url 'cotizaciones:add_item_cotizacion' item_id=banda.id precio=precio forma_pago=forma_de_pago cot_id=cotizacion_actual.id tipo=3 tras_tipo='CONVENCIONAL' %}">
+                                            {{ precio }}
+                                        </a>
+                                    {% else %}
                                         {{ precio }}
-                                    </a>
-                                {% else %}
-                                    {{ precio }}
+                                    {% endif %}
                                 {% endif %}
-                            {% endif %}
-                        </td>
-                        <td style="text-align: right">
-                        </td>
+                            </td>
+                            <td style="text-align: right">
+                            </td>
+                        {% endif %}
                         <td> LISTA PRECIOS BM</td>
                     </tr>
                 {% endfor %}
