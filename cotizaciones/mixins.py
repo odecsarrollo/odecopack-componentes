@@ -10,6 +10,7 @@ from weasyprint import HTML
 
 from bandas.models import Banda
 from configuraciones.models import DominiosEmail, EmailConfiguration
+from odeco.utils_queryset import query_varios_campos
 from seguimientos.models import SeguimientoComercialCliente
 from .models import FormaPago
 from productos.models import (
@@ -232,39 +233,33 @@ class ListaPreciosMixin(object):
         return context
 
     def get_lista_precios(self, context):
-        query = self.request.GET.get("buscar")
-        if query:
+        busqueda = self.request.GET.get("buscar")
+        if busqueda:
             context['tab'] = "LP"
             qs_bandas = Banda.activos.componentes().select_related(
                 "costo_ensamblado"
             ).prefetch_related(
                 "ensamblado",
-            ).filter(
-                Q(referencia__icontains=query) |
-                Q(descripcion_estandar__icontains=query) |
-                Q(descripcion_comercial__icontains=query)
-            ).distinct()
+            )
+            search_fields = ['referencia', 'descripcion_estandar', 'descripcion_comercial']
+            qs_bandas = query_varios_campos(qs_bandas, search_fields, busqueda).distinct()
 
             qs_componentes = Producto.activos.componentes().select_related(
                 "unidad_medida",
                 "margen",
                 "margen__proveedor",
                 "margen__proveedor__moneda",
-            ).filter(
-                Q(referencia__icontains=query) |
-                Q(descripcion_estandar__icontains=query) |
-                Q(descripcion_comercial__icontains=query)
             ).distinct().order_by('-modified')
+            qs_componentes = query_varios_campos(qs_componentes, search_fields, busqueda).distinct()
 
             qs_articulos_catalogo = ArticuloCatalogo.activos.todos().select_related(
                 "margen",
                 "margen__proveedor",
                 "margen__proveedor__moneda",
-            ).filter(
-                Q(referencia__icontains=query) |
-                Q(nombre__icontains=query) |
-                Q(categoria__icontains=query)
-            ).distinct()
+            )
+
+            search_fields = ['referencia', 'nombre', 'categoria']
+            qs_articulos_catalogo = query_varios_campos(qs_articulos_catalogo, search_fields, busqueda).distinct()
 
             context['object_list_componentes'] = qs_componentes
             context['object_list_articulos_catalogo'] = qs_articulos_catalogo

@@ -103,7 +103,6 @@ class CotizacionesListView(LoginRequiredMixin, UsuariosMixin, SelectRelatedMixin
         query = self.request.GET.get("buscado")
 
         current_user = self.request.user
-        qsFinal = None
 
         qs = Cotizacion.estados.activo().exclude(estado='INI')
 
