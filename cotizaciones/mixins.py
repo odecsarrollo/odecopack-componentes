@@ -234,6 +234,7 @@ class ListaPreciosMixin(object):
 
     def get_lista_precios(self, context):
         busqueda = self.request.GET.get("buscar")
+        forma_pago_id = self.request.GET.get('tipo')
         if busqueda:
             context['tab'] = "LP"
             qs_bandas = Banda.activos.componentes().select_related(
@@ -257,6 +258,11 @@ class ListaPreciosMixin(object):
                 "margen__proveedor",
                 "margen__proveedor__moneda",
             )
+
+            form_pago = FormaPago.objects.get(pk=forma_pago_id)
+            canal = form_pago.canal.canal
+            if canal != 'Cliente Final':
+                qs_articulos_catalogo = qs_articulos_catalogo.exclude(origen='SPR')
 
             search_fields = ['referencia', 'nombre', 'categoria']
             qs_articulos_catalogo = query_varios_campos(qs_articulos_catalogo, search_fields, busqueda).distinct()

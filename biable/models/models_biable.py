@@ -12,8 +12,6 @@ from .models_biable_intranet import GrupoCliente, LineaVendedorBiable
 from .managers import FacturaBiableActivaManager
 
 
-# Create your models here.
-
 class PaisBiable(models.Model):
     pais_id = models.PositiveIntegerField(primary_key=True)
     nombre = models.CharField(max_length=120)

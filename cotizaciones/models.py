@@ -104,26 +104,29 @@ class Cotizacion(TimeStampedModel):
 # region ItemCotizacion
 class ItemCotizacion(TimeStampedModel):
     cotizacion = models.ForeignKey(Cotizacion, related_name="items")
+    cantidad = models.DecimalField(max_digits=18, decimal_places=3, null=True)
+    precio = models.DecimalField(max_digits=18, decimal_places=2)
+    dias_entrega = models.PositiveIntegerField(default=0)
+    forma_pago = models.ForeignKey(FormaPago, related_name="items_cotizaciones", null=True)
+    p_n_lista_descripcion = models.CharField(max_length=120, null=True, verbose_name='Descripción Otro')
+    p_n_lista_referencia = models.CharField(max_length=120, null=True, verbose_name='Referencia Otro', blank=True)
+    p_n_lista_unidad_medida = models.CharField(max_length=120, null=True, verbose_name='Unidad Medida')
+    total = models.DecimalField(max_digits=18, decimal_places=2)
+
+
     item = models.ForeignKey(Producto, related_name="cotizaciones", null=True)
     banda = models.ForeignKey(Banda, related_name="cotizaciones", null=True)
     articulo_catalogo = models.ForeignKey(ArticuloCatalogo, related_name="cotizaciones", null=True)
-    cantidad = models.DecimalField(max_digits=18, decimal_places=3, null=True)
+
+
+    porcentaje_descuento = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    descuento = models.DecimalField(max_digits=18, decimal_places=2, default=0)
 
     cantidad_venta_perdida = models.DecimalField(max_digits=18, decimal_places=2, default=0)
     motivo_venta_perdida = models.CharField(max_length=120, default="NA")
     transporte_tipo = models.CharField(max_length=120)
     cantidad_total = models.DecimalField(max_digits=18, decimal_places=2, default=0)
     valor_venta_perdida_total = models.DecimalField(max_digits=18, decimal_places=2, default=0)
-
-    precio = models.DecimalField(max_digits=18, decimal_places=2)
-    forma_pago = models.ForeignKey(FormaPago, related_name="items_cotizaciones", null=True)
-    p_n_lista_descripcion = models.CharField(max_length=120, null=True, verbose_name='Descripción Otro')
-    p_n_lista_referencia = models.CharField(max_length=120, null=True, verbose_name='Referencia Otro', blank=True)
-    p_n_lista_unidad_medida = models.CharField(max_length=120, null=True, verbose_name='Unidad Medida')
-    total = models.DecimalField(max_digits=18, decimal_places=2)
-    dias_entrega = models.PositiveIntegerField(default=0)
-    porcentaje_descuento = models.DecimalField(max_digits=5, decimal_places=2, default=0)
-    descuento = models.DecimalField(max_digits=18, decimal_places=2, default=0)
 
     def get_nombre_item(self):
         if self.item:
