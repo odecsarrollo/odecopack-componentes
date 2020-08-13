@@ -114,9 +114,9 @@ class ItemCotizacion(TimeStampedModel):
     total = models.DecimalField(max_digits=18, decimal_places=2)
 
 
-    item = models.ForeignKey(Producto, related_name="cotizaciones", null=True)
+    item = models.ForeignKey(Producto, related_name="cotizaciones", null=True)#componentes
     banda = models.ForeignKey(Banda, related_name="cotizaciones", null=True)
-    articulo_catalogo = models.ForeignKey(ArticuloCatalogo, related_name="cotizaciones", null=True)
+    articulo_catalogo = models.ForeignKey(ArticuloCatalogo, related_name="cotizaciones", null=True)#ItemVentaCatalogo
 
 
     porcentaje_descuento = models.DecimalField(max_digits=5, decimal_places=2, default=0)
