@@ -56,7 +56,7 @@ olefile==0.44
 openpyxl==2.5.7
 pathspec==0.3.4
 pilkit==1.1.13
-Pillow==3.4.0
+Pillow==9.0.0
 pip-tools==5.3.1
 placebo==0.9.0
 pycparser==2.17
